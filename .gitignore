@@ -8,3 +8,14 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Keep data and database out of Git
+data/
+*.duckdb
+*.duckdb.wal
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/

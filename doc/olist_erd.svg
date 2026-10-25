@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-label="Olist crow's foot ERD">
+  <style>
+    .box { fill: #f8fafc; stroke: #1e3a5f; stroke-width: 1.6; }
+    .head { fill: #1e3a5f; }
+    .title { fill: #ffffff; font: 700 15px "Segoe UI", Arial, sans-serif; }
+    .col { fill: #0f172a; font: 13px "Segoe UI", Arial, sans-serif; }
+    .pk { fill: #0f172a; font: 700 13px "Segoe UI", Arial, sans-serif; }
+    .fk { fill: #1d4ed8; font: italic 13px "Segoe UI", Arial, sans-serif; }
+    .line { stroke: #334155; stroke-width: 1.8; fill: none; }
+    .verb { fill: #334155; font: 700 12px "Segoe UI", Arial, sans-serif; }
+    .hint { fill: #475569; font: 11px "Segoe UI", Arial, sans-serif; }
+    .bg { fill: #ffffff; }
+  </style>
+  <rect class="bg" width="1280" height="760"/>
+  <text x="40" y="36" class="pk">Olist e-commerce ERD (crow's foot)</text>
+  <text x="40" y="56" class="hint">PK and FK confirmed with SQL uniqueness and ANTI JOIN orphan checks</text>
+
+  <!-- CUSTOMERS -->
+  <rect class="box" x="40" y="210" width="250" height="196" rx="6"/>
+  <rect class="head" x="40" y="210" width="250" height="32" rx="6"/>
+  <rect class="head" x="40" y="226" width="250" height="16"/>
+  <text class="title" x="56" y="232">CUSTOMERS</text>
+  <text class="pk" x="56" y="266">PK  customer_id</text>
+  <text class="col" x="56" y="288">customer_unique_id</text>
+  <text class="col" x="56" y="310">customer_zip_code_prefix</text>
+  <text class="col" x="56" y="332">customer_city</text>
+  <text class="col" x="56" y="354">customer_state</text>
+  <text class="hint" x="56" y="386">grain: one checkout identity</text>
+
+  <!-- ORDERS -->
+  <rect class="box" x="430" y="170" width="300" height="276" rx="6"/>
+  <rect class="head" x="430" y="170" width="300" height="32" rx="6"/>
+  <rect class="head" x="430" y="186" width="300" height="16"/>
+  <text class="title" x="446" y="192">ORDERS</text>
+  <text class="pk" x="446" y="226">PK  order_id</text>
+  <text class="fk" x="446" y="248">FK  customer_id</text>
+  <text class="col" x="446" y="270">order_status</text>
+  <text class="col" x="446" y="292">order_purchase_timestamp</text>
+  <text class="col" x="446" y="314">order_approved_at</text>
+  <text class="col" x="446" y="336">order_delivered_carrier_date</text>
+  <text class="col" x="446" y="358">order_delivered_customer_date</text>
+  <text class="col" x="446" y="380">order_estimated_delivery_date</text>
+  <text class="hint" x="446" y="424">grain: one customer order</text>
+
+  <!-- ORDER_ITEMS -->
+  <rect class="box" x="930" y="230" width="300" height="220" rx="6"/>
+  <rect class="head" x="930" y="230" width="300" height="32" rx="6"/>
+  <rect class="head" x="930" y="246" width="300" height="16"/>
+  <text class="title" x="946" y="252">ORDER_ITEMS</text>
+  <text class="pk" x="946" y="286">PK  order_id + order_item_id</text>
+  <text class="fk" x="946" y="308">FK  order_id</text>
+  <text class="fk" x="946" y="330">FK  product_id</text>
+  <text class="fk" x="946" y="352">FK  seller_id</text>
+  <text class="col" x="946" y="374">shipping_limit_date</text>
+  <text class="col" x="946" y="396">price, freight_value</text>
+  <text class="hint" x="946" y="430">grain: one line in an order</text>
+
+  <!-- PRODUCTS -->
+  <rect class="box" x="930" y="20" width="300" height="150" rx="6"/>
+  <rect class="head" x="930" y="20" width="300" height="32" rx="6"/>
+  <rect class="head" x="930" y="36" width="300" height="16"/>
+  <text class="title" x="946" y="42">PRODUCTS</text>
+  <text class="pk" x="946" y="76">PK  product_id</text>
+  <text class="col" x="946" y="98">product_category_name</text>
+  <text class="col" x="946" y="120">weight / length / height / width</text>
+  <text class="hint" x="946" y="152">grain: one catalog product</text>
+
+  <!-- SELLERS -->
+  <rect class="box" x="930" y="530" width="300" height="150" rx="6"/>
+  <rect class="head" x="930" y="530" width="300" height="32" rx="6"/>
+  <rect class="head" x="930" y="546" width="300" height="16"/>
+  <text class="title" x="946" y="552">SELLERS</text>
+  <text class="pk" x="946" y="586">PK  seller_id</text>
+  <text class="col" x="946" y="608">seller_zip_code_prefix</text>
+  <text class="col" x="946" y="630">seller_city, seller_state</text>
+  <text class="hint" x="946" y="662">grain: one marketplace seller</text>
+
+  <!-- customers to orders: ||--|{  places -->
+  <path class="line" d="M290,308 H392"/>
+  <!-- one (mandatory) on customers -->
+  <line class="line" x1="296" y1="298" x2="296" y2="318"/>
+  <line class="line" x1="304" y1="298" x2="304" y2="318"/>
+  <!-- one or many on orders -->
+  <line class="line" x1="422" y1="298" x2="422" y2="318"/>
+  <path class="line" d="M430,308 L414,298"/>
+  <path class="line" d="M430,308 L414,318"/>
+  <text class="verb" x="330" y="298">places</text>
+
+  <!-- orders to items: ||--o{  contains -->
+  <path class="line" d="M730,340 H888"/>
+  <line class="line" x1="736" y1="330" x2="736" y2="350"/>
+  <line class="line" x1="744" y1="330" x2="744" y2="350"/>
+  <circle cx="906" cy="340" r="6" fill="#ffffff" stroke="#334155" stroke-width="1.8"/>
+  <path class="line" d="M930,340 L910,330"/>
+  <path class="line" d="M930,340 L910,350"/>
+  <text class="verb" x="780" y="330">contains</text>
+
+  <!-- products to items: ||--|{  listed on -->
+  <path class="line" d="M1080,170 V230"/>
+  <line class="line" x1="1070" y1="176" x2="1090" y2="176"/>
+  <line class="line" x1="1070" y1="184" x2="1090" y2="184"/>
+  <line class="line" x1="1070" y1="222" x2="1090" y2="222"/>
+  <path class="line" d="M1080,230 L1070,214"/>
+  <path class="line" d="M1080,230 L1090,214"/>
+  <text class="verb" x="1092" y="204">listed on</text>
+
+  <!-- sellers to items: ||--|{  sells -->
+  <path class="line" d="M1080,530 V450"/>
+  <line class="line" x1="1070" y1="524" x2="1090" y2="524"/>
+  <line class="line" x1="1070" y1="516" x2="1090" y2="516"/>
+  <line class="line" x1="1070" y1="458" x2="1090" y2="458"/>
+  <path class="line" d="M1080,450 L1070,466"/>
+  <path class="line" d="M1080,450 L1090,466"/>
+  <text class="verb" x="1092" y="496">sells</text>
+</svg>

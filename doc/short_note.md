@@ -1,0 +1,5 @@
+# Assignment 1 — Short note (Task 4)
+
+Answers **4a**, **4b**, and **4c** from [`DWH_OLAP_Assignment_1.pdf`](DWH_OLAP_Assignment_1.pdf) in five sentences.
+
+`customer_id` uniquely identifies one customer row tied to exactly one order in this dataset (99,441 rows, all distinct), so it behaves like a per-checkout identifier. `customer_unique_id` has only 96,096 distinct values, and 2,997 people map to more than one `customer_id`, so you should use `customer_unique_id` when counting distinct customers. The junction table is `order_items`: it connects orders to products and sellers through foreign keys on `order_id`, `product_id`, and `seller_id`, breaking the many-to-many between orders and products into one row per line item. The customers-to-orders relationship is stricter than the one-to-many symbol on the ERD because each customer row has exactly one order (minimum and maximum both 1 in the cardinality check). The optional circle on orders-to-order_items is justified because 775 orders have no matching items in the data.
